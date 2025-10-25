@@ -1,0 +1,119 @@
+# api/main.py
+import os, dotenv
+from fastapi import FastAPI, Body
+from fastapi.middleware.cors import CORSMiddleware
+from openai import OpenAI
+import chromadb
+from sentence_transformers import SentenceTransformer
+
+dotenv.load_dotenv()
+OPENAI_CHAT_MODEL = os.getenv("OPENAI_CHAT_MODEL", "gpt-5")
+OPENAI_EMBED_MODEL = os.getenv("OPENAI_EMBED_MODEL", "text-embedding-3-large")
+
+# Bases vetoriais
+LOCAL_DB = chromadb.PersistentClient(path="data/vectors/local")
+ABS_DB   = chromadb.PersistentClient(path="data/vectors/abstracts")
+LOCAL_COLL = LOCAL_DB.get_or_create_collection("archive_fragments")
+ABS_COLL   = ABS_DB.get_or_create_collection("codex_abstracts")
+
+# Embeddings para consulta
+LOCAL_EMB_MODEL = SentenceTransformer("BAAI/bge-large-en-v1.5")
+client = OpenAI()
+
+app = FastAPI(title="Mind Field API")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"]
+)
+
+def embed_openai(text: str):
+    r = client.embeddings.create(model=OPENAI_EMBED_MODEL, input=text)
+    return r.data[0].embedding
+
+def hybrid_search(query: str, k_local=12, k_abs=6, filters=None):
+    filters = filters or {}
+    # 1) busca local (embeddings locais)
+    q_local = LOCAL_EMB_MODEL.encode(query, normalize_embeddings=True).tolist()
+    local = LOCAL_COLL.query(query_embeddings=[q_local], n_results=k_local, where=filters)
+    metadatas = local.get("metadatas", [[]])[0]
+    documents = local.get("documents", [[]])[0]  # (pode estar vazio; não usamos texto cru aqui)
+
+    # 2) agrupar códices dos hits locais
+    codex_ids = list({m.get("codex") for m in metadatas if m and m.get("codex")})
+
+    # 3) busca em sumários (embeddings OpenAI) filtrando pelos códices vizinhos
+    q_openai = embed_openai(query)
+    where = {"codex": {"$in": codex_ids}} if codex_ids else {}
+    abstracts = ABS_COLL.query(query_embeddings=[q_openai], n_results=k_abs, where=where)
+
+    return local, abstracts
+
+def build_prompt(query, local, abstracts):
+    # Seleciona 6 fragmentos curtos dos locais + 5 sumários
+    loc_meta = local.get("metadatas", [[]])[0]
+    loc_docs = local.get("documents", [[]])[0]
+    # se a coleção não armazena "documents", pegue do metadata['content']
+    if not loc_docs and loc_meta:
+        loc_docs = [m.get("content","") for m in loc_meta]
+
+    def short(txt, n=400):
+        return (txt[:n] + "…") if len(txt) > n else txt
+
+    texture_lines = []
+    for m, d in list(zip(loc_meta, loc_docs))[:6]:
+        tag = f"[{m.get('codex','?')} · {m.get('date_written','?')} · {m.get('voice','?')}]"
+        texture_lines.append(f"{tag} {short(d)}")
+
+    abs_meta = abstracts.get("metadatas", [[]])[0]
+    abs_docs = abstracts.get("documents", [[]])[0]
+    if not abs_docs and abs_meta:
+        abs_docs = [m.get("summary","") for m in abs_meta]
+
+    context_lines = []
+    for m, d in list(zip(abs_meta, abs_docs))[:5]:
+        context_lines.append(f"({m.get('codex','?')} / {m.get('title','?')}) {short(d, 600)}")
+
+    context = "\n".join(context_lines) or "(sem sumários)"
+    texture = "\n".join(texture_lines) or "(sem fragmentos)"
+
+    prompt = f"""
+Você é o **Arquivista de Delta** (pt-BR, tom cosmopoético, não utilitarista).
+TAREFA:
+- Responder à pergunta preservando o estilo do arquivo.
+- Separar em duas seções: **ECO** (citações/evocações sutis) e **SÍNTESE** (interpretação).
+- Basear-se nos SUMÁRIOS (bússola) e FRAGMENTOS (textura). Evitar inventar fatos fora deles.
+- Se o material é insuficiente, declare limites com graça.
+
+PERGUNTA:
+{query}
+
+SUMÁRIOS (bússola):
+{context}
+
+FRAGMENTOS (textura):
+{texture}
+"""
+    return prompt
+
+@app.post("/ask")
+def ask(payload: dict = Body(...)):
+    query = payload.get("query","").strip()
+    filters = payload.get("filters") or None
+    local, abstracts = hybrid_search(query, filters=filters)
+    prompt = build_prompt(query, local, abstracts)
+    chat = client.chat.completions.create(
+        model=OPENAI_CHAT_MODEL,
+        messages=[
+            {"role":"system","content":"Você é o Arquivista de Delta."},
+            {"role":"user","content": prompt}
+        ],
+        temperature=0.4
+    )
+    answer = chat.choices[0].message.content
+    return {
+        "answer": answer,
+        "debug": {
+            "local_hits": len(local.get("ids",[[]])[0]),
+            "abstract_hits": len(abstracts.get("ids",[[]])[0])
+        }
+    }

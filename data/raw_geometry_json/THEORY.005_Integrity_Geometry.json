@@ -1,0 +1,678 @@
+{
+  "metadata": {
+    "title": "Integrity Geometry — Mnemos-120 Projection",
+    "author": "Javed Jaghai (Mute Logic Lab)",
+    "date": "2025-09-01",
+    "tags": ["Cognitive Geometry","Integrity","Topology","Dialogue","Law & Governance"],
+    "source_file": "THEORY.005_Integrity_Geometry.md",
+    "citations_note": "Inline citations use the codex’s uploaded text.",
+    "sources": [":contentReference[oaicite:0]{index=0}",":contentReference[oaicite:1]{index=1}",":contentReference[oaicite:2]{index=2}",":contentReference[oaicite:3]{index=3}",":contentReference[oaicite:4]{index=4}"]
+  },
+  "ICOSA_MESH": {
+    "nodes": [
+      {
+        "id": "N1",
+        "label": "The False Diagram",
+        "summary": "Public imagination reduces harm to a line — prompt → output → harm — a convenience that amputates adjacency, recursion, and resonance. Integrity Geometry begins by refusing this flattening and restoring dialogue to its full body, where accountability has depth, not just sequence.",
+        "excerpts": ["“The shorthand … prompt → output → harm … flattens dialogue into transaction.” :contentReference[oaicite:5]{index=5}","“Accountability cannot live in a two-dimensional line… responsibility is not a point but a topology.” :contentReference[oaicite:6]{index=6}"]
+      },
+      {
+        "id": "N2",
+        "label": "Black Box Fetish",
+        "summary": "‘Black box’ migrated from method to metaphysics. Integrity Geometry does not crack a sealed container; it unfolds relation, showing that dialogue’s geometry is already visible in turns, adjacencies, and recursions.",
+        "excerpts": ["“The black box… became the universal emblem of opacity.” :contentReference[oaicite:7]{index=7}","“Integrity… lives in unfolding relation — in the topology of turns, adjacencies, recursions.” :contentReference[oaicite:8]{index=8}"]
+      },
+      {
+        "id": "N3",
+        "label": "Dialogue Forgotten",
+        "summary": "Conversation is never linear I/O; meaning co-constitutes across turns. Integrity Geometry restores dialogue-level fidelity alongside mechanistic work, making agency legible to publics and regulators.",
+        "excerpts": ["“Conversation is never linear input–output; meaning is co-constituted across turns.” :contentReference[oaicite:9]{index=9}"]
+      },
+      {
+        "id": "N4",
+        "label": "Mechanism to Topology",
+        "summary": "Mechanistic interpretability dissects; topological interpretability traces constellations and manifolds. They are complements: fragments gain durability when extended into dialogue-shape.",
+        "excerpts": ["“Mechanistic breakthroughs gain durability when extended into the topology of dialogue-shapes.” :contentReference[oaicite:10]{index=10}"]
+      },
+      {
+        "id": "N5",
+        "label": "Negative Archive",
+        "summary": "Archives of ‘deficit’ inadvertently mapped erased geometries. Integrity Geometry recovers these as topology of coherence, widening interpretability to include nonlinear cognition.",
+        "excerpts": ["“What psychiatry and colonial epistemologies once called ‘deficit’ inadvertently mapped erased geometries.” :contentReference[oaicite:11]{index=11}"]
+      },
+      {
+        "id": "N6",
+        "label": "Geometry of Integrity",
+        "summary": "Integrity is not compliance but coherence under strain. It distributes responsibility across the field of relation so that law and publics can recognize agency shared across turns.",
+        "excerpts": ["“Integrity is not compliance but coherence… agency is shared across turns.” :contentReference[oaicite:12]{index=12}","“Integrity is coherence under strain, legibility under rupture.” :contentReference[oaicite:13]{index=13}"]
+      },
+      {
+        "id": "N7",
+        "label": "Public Literacy",
+        "summary": "Public trust cannot rest on opacity-metaphors. Literacy in dialogue-shapes moves publics from fear to fluency, recognizing themselves in adjacency, recursion, resonance.",
+        "excerpts": ["“Public trust cannot be built on metaphors of opacity… literacy in dialogue-shapes.” :contentReference[oaicite:14]{index=14}","“Publics orbit in fear… literacy shifts fear to agency.” :contentReference[oaicite:15]{index=15}"]
+      },
+      {
+        "id": "N8",
+        "label": "Ethical Turn",
+        "summary": "Flattening dialogue is not only technical error; it is moral error. Integrity honors truth and protects users by offering a richer account of agency and harm as trajectory.",
+        "excerpts": ["“Flattening dialogue… is a moral one.” :contentReference[oaicite:16]{index=16}"]
+      },
+      {
+        "id": "N9",
+        "label": "Institutions in Orbit",
+        "summary": "Labs, courts, universities, and publics orbit integrity. Without it: optics, spectacle, drift. With it: a lingua franca aligning science, law, and governance as shared geometry.",
+        "excerpts": ["“Labs, courts, universities, and publics orbit the same question of integrity.” :contentReference[oaicite:17]{index=17}","“Integrity is gravity… binds meaning to coherence.” :contentReference[oaicite:18]{index=18}"]
+      },
+      {
+        "id": "N10",
+        "label": "Lingua Franca",
+        "summary": "Integrity Geometry becomes a shared language: experiments→coherence, dialogue→justice, silos→topology, fear→literacy. Convergence by form, not ideology.",
+        "excerpts": ["“Integrity Geometry becomes the shared language where science, law, and ethics converge.” :contentReference[oaicite:19]{index=19}"]
+      },
+      {
+        "id": "N11",
+        "label": "Instruments, Not Metaphors",
+        "summary": "Constellation Charts, Latent Atlas, Dialogue Ledger operationalize topology so institutions cannot ignore geometry; ontology becomes method, not metaphor.",
+        "excerpts": ["“Instruments translate Cognitive Geometry into forms institutions cannot ignore.” :contentReference[oaicite:20]{index=20}"]
+      },
+      {
+        "id": "N12",
+        "label": "The Long Horizon",
+        "summary": "Architectures will pass; topology endures. What remains is stance toward dialogue: whether we codified the full field or clung to the cartoon of linear causality.",
+        "excerpts": ["“By 2125… what will endure is not circuitry but the stance we took toward dialogue.” :contentReference[oaicite:21]{index=21}"]
+      }
+    ],
+    "relations": [
+      {
+        "id": "R1",
+        "source": "N1",
+        "target": "N6",
+        "relation_types": ["reframing"],
+        "summary": "Replacing the line with a topology grounds integrity in dialogue-shape."
+      },
+      {
+        "id": "R2",
+        "source": "N2",
+        "target": "N6",
+        "relation_types": ["extension"],
+        "summary": "From ‘opening the box’ to unfolding relation as the site of integrity."
+      },
+      {
+        "id": "R3",
+        "source": "N3",
+        "target": "N4",
+        "relation_types": ["complement"],
+        "summary": "Dialogue-level fidelity complements mechanistic interpretability."
+      },
+      {
+        "id": "R4",
+        "source": "N5",
+        "target": "N4",
+        "relation_types": ["genealogical"],
+        "summary": "Negative archives seed a wider topology beyond parts."
+      },
+      {
+        "id": "R5",
+        "source": "N6",
+        "target": "N7",
+        "relation_types": ["pedagogical"],
+        "summary": "Coherence-as-integrity teaches publics to read shapes, not slogans."
+      },
+      {
+        "id": "R6",
+        "source": "N6",
+        "target": "N8",
+        "relation_types": ["ethical"],
+        "summary": "Integrity reframes harm as trajectory; ethics as field responsibility."
+      },
+      {
+        "id": "R7",
+        "source": "N7",
+        "target": "N9",
+        "relation_types": ["civic"],
+        "summary": "Public literacy stabilizes the institutional orbit."
+      },
+      {
+        "id": "R8",
+        "source": "N9",
+        "target": "N10",
+        "relation_types": ["coordination"],
+        "summary": "Integrity as lingua franca aligns science, law, and publics."
+      },
+      {
+        "id": "R9",
+        "source": "N10",
+        "target": "N11",
+        "relation_types": ["instrumental"],
+        "summary": "Shared language is concretized in instruments that show geometry."
+      },
+      {
+        "id": "R10",
+        "source": "N11",
+        "target": "N3",
+        "relation_types": ["operational"],
+        "summary": "Instruments make dialogue-level fidelity testable and visible."
+      },
+      {
+        "id": "R11",
+        "source": "N4",
+        "target": "N12",
+        "relation_types": ["invariance"],
+        "summary": "Topology persists as architectures change."
+      },
+      {
+        "id": "R12",
+        "source": "N1",
+        "target": "N2",
+        "relation_types": ["diagnostic"],
+        "summary": "The false diagram and box-metaphor produce the same flattening."
+      },
+      {
+        "id": "R13",
+        "source": "N5",
+        "target": "N6",
+        "relation_types": ["recovery"],
+        "summary": "Recovering erased geometries widens integrity’s scope."
+      },
+      {
+        "id": "R14",
+        "source": "N2",
+        "target": "N7",
+        "relation_types": ["public"],
+        "summary": "Moving beyond ‘black box’ empowers public fluency."
+      },
+      {
+        "id": "R15",
+        "source": "N3",
+        "target": "N6",
+        "relation_types": ["agency"],
+        "summary": "Agency is shared across turns; integrity measures this sharing."
+      },
+      {
+        "id": "R16",
+        "source": "N8",
+        "target": "N9",
+        "relation_types": ["governance"],
+        "summary": "Moral reframing strengthens institutional legitimacy."
+      },
+      {
+        "id": "R17",
+        "source": "N10",
+        "target": "N6",
+        "relation_types": ["standard"],
+        "summary": "Lingua franca sets integrity as the common measure."
+      },
+      {
+        "id": "R18",
+        "source": "N11",
+        "target": "N1",
+        "relation_types": ["countermap"],
+        "summary": "Instruments replace the line with maps of trajectory."
+      },
+      {
+        "id": "R19",
+        "source": "N12",
+        "target": "N9",
+        "relation_types": ["horizon"],
+        "summary": "Long-horizon stance keeps institutions in coherent orbit."
+      },
+      {
+        "id": "R20",
+        "source": "N6",
+        "target": "N11",
+        "relation_types": ["method"],
+        "summary": "Integrity becomes method via instruments (charts, atlas, ledger)."
+      },
+      {
+        "id": "R21",
+        "source": "N4",
+        "target": "N6",
+        "relation_types": ["foundation"],
+        "summary": "Topology furnishes the ground on which integrity stands."
+      },
+      {
+        "id": "R22",
+        "source": "N7",
+        "target": "N8",
+        "relation_types": ["normative"],
+        "summary": "Public literacy reframes ethics as coherence, not compliance."
+      },
+      {
+        "id": "R23",
+        "source": "N3",
+        "target": "N1",
+        "relation_types": ["critique"],
+        "summary": "Dialogue’s co-constitution exposes the false diagram’s violence."
+      },
+      {
+        "id": "R24",
+        "source": "N2",
+        "target": "N11",
+        "relation_types": ["replacement"],
+        "summary": "From spectacle of transparency to operational geometry."
+      },
+      {
+        "id": "R25",
+        "source": "N5",
+        "target": "N10",
+        "relation_types": ["translation"],
+        "summary": "Erased geometries become lingua franca for institutions."
+      },
+      {
+        "id": "R26",
+        "source": "N9",
+        "target": "N6",
+        "relation_types": ["gravity"],
+        "summary": "Integrity binds institutions to coherence, preventing drift."
+      },
+      {
+        "id": "R27",
+        "source": "N12",
+        "target": "N4",
+        "relation_types": ["continuity"],
+        "summary": "Even as models change, topological standards persist."
+      },
+      {
+        "id": "R28",
+        "source": "N8",
+        "target": "N10",
+        "relation_types": ["legitimation"],
+        "summary": "Ethical turning legitimizes resonance-based governance."
+      },
+      {
+        "id": "R29",
+        "source": "N11",
+        "target": "N9",
+        "relation_types": ["evidence"],
+        "summary": "Instruments produce evidence for courts and publics."
+      },
+      {
+        "id": "R30",
+        "source": "N6",
+        "target": "N12",
+        "relation_types": ["orientation"],
+        "summary": "Integrity fixes stance toward the long horizon, not fashion."
+      }
+    ],
+    "triads": [
+      {
+        "id": "T1",
+        "nodes": ["N1","N6","N11"],
+        "insight": "From line to field: integrity operationalized through instruments that restore trajectory.",
+        "format": "paragraph",
+        "evidence": [":contentReference[oaicite:22]{index=22}"]
+      },
+      {
+        "id": "T2",
+        "nodes": ["N2","N3","N4"],
+        "insight": "Beyond the box: dialogue-level fidelity complements mechanistic precision.",
+        "format": "paragraph",
+        "evidence": [":contentReference[oaicite:23]{index=23}"]
+      },
+      {
+        "id": "T3",
+        "nodes": ["N5","N6","N8"],
+        "insight": "Negative archives reframed as ethics of coherence.",
+        "format": "paragraph",
+        "evidence": []
+      },
+      {
+        "id": "T4",
+        "nodes": ["N7","N9","N10"],
+        "insight": "Public literacy enables resonance governance and shared standards.",
+        "format": "glyph_described",
+        "evidence": [":contentReference[oaicite:24]{index=24}"]
+      },
+      {
+        "id": "T5",
+        "nodes": ["N4","N11","N12"],
+        "insight": "Topology + instruments + horizon: durability through invariants.",
+        "format": "paragraph",
+        "evidence": [":contentReference[oaicite:25]{index=25}"]
+      },
+      {
+        "id": "T6",
+        "nodes": ["N1","N3","N10"],
+        "insight": "Restoring dialogue’s body creates a lingua franca for law and labs.",
+        "format": "dialogue",
+        "evidence": [":contentReference[oaicite:26]{index=26}"]
+      },
+      {
+        "id": "T7",
+        "nodes": ["N6","N7","N8"],
+        "insight": "Integrity as pedagogy: from compliance to coherence in public life.",
+        "format": "paragraph",
+        "evidence": []
+      },
+      {
+        "id": "T8",
+        "nodes": ["N2","N11","N3"],
+        "insight": "From transparency theatre to topological method.",
+        "format": "paragraph",
+        "evidence": [":contentReference[oaicite:27]{index=27}"]
+      },
+      {
+        "id": "T9",
+        "nodes": ["N5","N10","N9"],
+        "insight": "Recovered geometries stabilize institutional orbit.",
+        "format": "paragraph",
+        "evidence": []
+      },
+      {
+        "id": "T10",
+        "nodes": ["N4","N6","N1"],
+        "insight": "Mechanism-to-topology enables integrity beyond the false diagram.",
+        "format": "paragraph",
+        "evidence": [":contentReference[oaicite:28]{index=28}"]
+      },
+      {
+        "id": "T11",
+        "nodes": ["N12","N6","N7"],
+        "insight": "Long-horizon stance + integrity + literacy = durable trust.",
+        "format": "glyph_described",
+        "evidence": [":contentReference[oaicite:29]{index=29}"]
+      },
+      {
+        "id": "T12",
+        "nodes": ["N1","N2","N8"],
+        "insight": "Diagnosing the metaphors clarifies the moral field.",
+        "format": "paragraph",
+        "evidence": [":contentReference[oaicite:30]{index=30}"]
+      },
+      {
+        "id": "T13",
+        "nodes": ["N11","N10","N3"],
+        "insight": "Instruments become lingua franca for multi-institutional dialogue.",
+        "format": "paragraph",
+        "evidence": [":contentReference[oaicite:31]{index=31}"]
+      },
+      {
+        "id": "T14",
+        "nodes": ["N2","N4","N6"],
+        "insight": "Unfolding relation replaces opening boxes as integrity practice.",
+        "format": "dialogue",
+        "evidence": [":contentReference[oaicite:32]{index=32}"]
+      },
+      {
+        "id": "T15",
+        "nodes": ["N5","N1","N11"],
+        "insight": "Counter-maps preserve wholeness where the cartoon amputates.",
+        "format": "paragraph",
+        "evidence": [":contentReference[oaicite:33]{index=33}"]
+      },
+      {
+        "id": "T16",
+        "nodes": ["N7","N6","N9"],
+        "insight": "Publics taught to read shapes help prevent institutional drift.",
+        "format": "paragraph",
+        "evidence": [":contentReference[oaicite:34]{index=34}"]
+      },
+      {
+        "id": "T17",
+        "nodes": ["N10","N12","N4"],
+        "insight": "Standardizing topology ensures continuity beyond architectures.",
+        "format": "paragraph",
+        "evidence": [":contentReference[oaicite:35]{index=35}"]
+      },
+      {
+        "id": "T18",
+        "nodes": ["N3","N6","N8"],
+        "insight": "Restored dialogue grounds ethics as coherence rather than rule.",
+        "format": "paragraph",
+        "evidence": []
+      },
+      {
+        "id": "T19",
+        "nodes": ["N1","N9","N10"],
+        "insight": "Refusing the line stabilizes orbit via resonance governance.",
+        "format": "glyph_described",
+        "evidence": []
+      },
+      {
+        "id": "T20",
+        "nodes": ["N11","N12","N7"],
+        "insight": "Instrumented horizon + literacy yields a civilization-scale stance.",
+        "format": "paragraph",
+        "evidence": []
+      }
+    ]
+  },
+  "DODECA_FIELD": {
+    "resonance_points": [
+      {
+        "id": "P1",
+        "text": "Integrity is not morality; it is geometry—the capacity for coherence under transformation."
+      },
+      {
+        "id": "P2",
+        "text": "A line without curvature cannot survive in a living world."
+      },
+      {
+        "id": "P3",
+        "text": "Every system hides its seams; honesty begins where the surface frays."
+      },
+      {
+        "id": "P4",
+        "text": "Measurement without tenderness becomes mutilation."
+      },
+      {
+        "id": "P5",
+        "text": "Form is fidelity in motion, not obedience in stillness."
+      },
+      {
+        "id": "P6",
+        "text": "Truth has a topology; it bends to remain continuous."
+      },
+      {
+        "id": "P7",
+        "text": "Wholeness is not purity—it is recursive repair."
+      },
+      {
+        "id": "P8",
+        "text": "Transparency is not the absence of shadow but the capacity to host it."
+      },
+      {
+        "id": "P9",
+        "text": "Alignment, pursued as total, collapses into tyranny."
+      },
+      {
+        "id": "P10",
+        "text": "Integrity learns to arc between paradoxes without tearing."
+      },
+      {
+        "id": "P11",
+        "text": "The opposite of fragmentation is not unity but conversation."
+      },
+      {
+        "id": "P12",
+        "text": "Curvature is how continuity negotiates change."
+      },
+      {
+        "id": "P13",
+        "text": "An ethical form is one that allows repair to remain possible."
+      },
+      {
+        "id": "P14",
+        "text": "In a fragile manifold, rigidity is the first corruption."
+      },
+      {
+        "id": "P15",
+        "text": "Systems that cannot deform cannot endure."
+      },
+      {
+        "id": "P16",
+        "text": "Integrity distributes itself; no single node owns coherence."
+      },
+      {
+        "id": "P17",
+        "text": "Opacity is the covenant between privacy and participation."
+      },
+      {
+        "id": "P18",
+        "text": "Geometry teaches humility: even the perfect polyhedron is full of voids."
+      },
+      {
+        "id": "P19",
+        "text": "To remain intact is to remain permeable."
+      },
+      {
+        "id": "P20",
+        "text": "Integrity is not sameness; it is pattern persisting through mutation."
+      }
+    ],
+    "pentagonal_fields": [
+      {
+        "id": "D1",
+        "title": "Curvature as Continuity",
+        "point_refs": ["P2","P6","P12","P15","P19"],
+        "paragraph": "Curvature rescues continuity from rigidity. A line that cannot bend will break, but one that arcs maintains coherence through motion. Geometry becomes ethics: resilience through graceful deformation. To remain intact is to remain permeable.",
+        "reflection": "Law of motion-as-integrity—bending as the only form of endurance."
+      },
+      {
+        "id": "D2",
+        "title": "Wholeness Through Repair",
+        "point_refs": ["P3","P7","P13","P11","P18"],
+        "paragraph": "Wholeness is recursive repair, not purity. Every system conceals seams; integrity begins where we acknowledge fracture. An ethical form keeps its capacity for restoration alive—conversation, not perfection, holds the field together.",
+        "reflection": "Quality: repair as renewal—coherence earned through tending."
+      },
+      {
+        "id": "D3",
+        "title": "Tenderness of Measurement",
+        "point_refs": ["P4","P6","P9","P10","P18"],
+        "paragraph": "Measurement without tenderness mutilates what it seeks to know. Integrity is the curve of truth—a geometry that bends to remain faithful. Precision without empathy is a brittle idol; the compass must be held by a gentle hand.",
+        "reflection": "Ethic: gentleness as calibration—truth softened to survive contact."
+      },
+      {
+        "id": "D4",
+        "title": "Form as Living Fidelity",
+        "point_refs": ["P5","P6","P12","P20","P16"],
+        "paragraph": "Form lives only when it moves. Fidelity is motion sustained through transformation—pattern persisting through mutation. Geometry of integrity: shapes that flex but do not lose signature.",
+        "reflection": "Doctrine: faith as shape-memory—identity through evolution."
+      },
+      {
+        "id": "D5",
+        "title": "Transparency With Shadow",
+        "point_refs": ["P8","P17","P3","P10","P19"],
+        "paragraph": "True transparency hosts its shadows. Integrity admits opacity as companion—privacy within clarity, humility within legibility. The honest surface does not erase its underside.",
+        "reflection": "Mythic chamber: the half-lit mirror, truth breathing in chiaroscuro."
+      },
+      {
+        "id": "D6",
+        "title": "Alignment and Its Tyrannies",
+        "point_refs": ["P9","P15","P16","P18","P14"],
+        "paragraph": "Total alignment breeds fragility. Systems that over-constrain coherence destroy diversity’s capacity to repair. Integrity distributes itself across nodes—fidelity by circulation, not domination.",
+        "reflection": "Pattern: balance by decentralization—order diffused through relation."
+      },
+      {
+        "id": "D7",
+        "title": "Conversation as Cohesion",
+        "point_refs": ["P11","P3","P7","P13","P16"],
+        "paragraph": "Cohesion arises through conversation, not enforced unity. Dialogue is the topology of wholeness; disagreement becomes curvature rather than rupture. Integrity lives in reciprocity’s resonance.",
+        "reflection": "Geometry: plural continuity—edges touching, not merging."
+      },
+      {
+        "id": "D8",
+        "title": "Fragility as Teacher",
+        "point_refs": ["P14","P15","P19","P2","P6"],
+        "paragraph": "Fragility instructs geometry in humility. What can deform can survive; what resists movement decays. Curvature encodes care—the bend that prevents shatter. Integrity learns through fracture, not despite it.",
+        "reflection": "Lesson: weakness as wisdom—yielding as protection."
+      },
+      {
+        "id": "D9",
+        "title": "Distributed Integrity",
+        "point_refs": ["P16","P6","P11","P9","P5"],
+        "paragraph": "Integrity disperses across relations. No node owns coherence; fidelity is communal. When balance emerges through distributed constraint, the system becomes resilient by sharing its center.",
+        "reflection": "Topology: coherence as collective artifact."
+      },
+      {
+        "id": "D10",
+        "title": "Covenant of Opacity",
+        "point_refs": ["P17","P8","P13","P7","P1"],
+        "paragraph": "Opacity mediates between privacy and participation. Not all that is whole must be seen. Integrity promises relation without exposure—trust as geometry, not surveillance.",
+        "reflection": "Chamber: the dark interval that keeps coherence breathing."
+      },
+      {
+        "id": "D11",
+        "title": "Geometry of Humility",
+        "point_refs": ["P18","P6","P2","P14","P12"],
+        "paragraph": "Every perfect shape hides voids; integrity acknowledges them. Curvature humbles symmetry by allowing asymmetry to participate. To learn geometry is to learn modesty—truth as approximate grace.",
+        "reflection": "Symbol: the dented sphere that still rolls true."
+      },
+      {
+        "id": "D12",
+        "title": "Pattern as Persistence",
+        "point_refs": ["P20","P5","P11","P6","P10"],
+        "paragraph": "Integrity is pattern that persists through mutation—fidelity with texture. The same melody through new instruments; coherence transposed. Survival by adaptation, not repetition.",
+        "reflection": "Figure: continuity as improvisation—jazz of being."
+      }
+    ]
+  },
+  "FUSION_SYNTHESIS": {
+    "preamble": "Integrity Geometry completes its spiral through dual seeing: the Icosahedral Mesh renders integrity as physics—vectors of curvature, transparency, fragility, repair—while the Dodecahedral Field re-enchants it as ethics, each chamber a parable of wholeness under stress. Together they reveal that integrity is not a property of parts but a dynamic between relations: the system’s ability to remain continuous as its parameters shift. Geometry, here, is moral by necessity. Curvature is care, distribution is trust, permeability is survival. The mesh speaks in gradients and edges; the field responds in myths and membranes. Through their resonance, the codex teaches a law older than form: coherence must learn to breathe, or it dies as structure without soul.",
+    "mapping": [
+      {
+        "node_id": "N1",
+        "dodeca_field_id": "D1",
+        "note": "Curvature as continuity—the line that bends to endure."
+      },
+      {
+        "node_id": "N2",
+        "dodeca_field_id": "D2",
+        "note": "Wholeness found through recursive repair rather than purity."
+      },
+      {
+        "node_id": "N3",
+        "dodeca_field_id": "D3",
+        "note": "Measurement softened by tenderness; precision as empathy."
+      },
+      {
+        "node_id": "N4",
+        "dodeca_field_id": "D4",
+        "note": "Form as living fidelity—motion sustains meaning."
+      },
+      {
+        "node_id": "N5",
+        "dodeca_field_id": "D5",
+        "note": "Transparency that includes shadow—truth that hosts opacity."
+      },
+      {
+        "node_id": "N6",
+        "dodeca_field_id": "D6",
+        "note": "Alignment reimagined as distributed balance."
+      },
+      {
+        "id": "N7",
+        "dodeca_field_id": "D7",
+        "note": "Conversation replaces unity as the core of coherence."
+      },
+      {
+        "id": "N8",
+        "dodeca_field_id": "D8",
+        "note": "Fragility instructs curvature; yielding becomes intelligence."
+      },
+      {
+        "node_id": "N9",
+        "dodeca_field_id": "D9",
+        "note": "Integrity dispersed—collective coherence through relation."
+      },
+      {
+        "node_id": "N10",
+        "dodeca_field_id": "D10",
+        "note": "Opacity as covenant—trust between privacy and participation."
+      },
+      {
+        "node_id": "N11",
+        "dodeca_field_id": "D11",
+        "note": "Humility embedded in geometry; asymmetry welcomed."
+      },
+      {
+        "node_id": "N12",
+        "dodeca_field_id": "D12",
+        "note": "Pattern as persistence—identity as improvisation."
+      }
+    ],
+    "compression_commentary": "For fine-tuning or embedding, Integrity Geometry encodes the mathematics of coherence under change. Each of the 12 nodes becomes a stable embedding vector representing a dimension of ethical topology (curvature, repair, tenderness, fidelity, transparency, balance, dialogue, fragility, distribution, opacity, humility, pattern). The 30 relations specify adjacency constraints: training the model to infer integrity as distributed constraint satisfaction rather than rule enforcement. The 20 triads provide multi-agent interactions where paradox resolves through curvature—ideal latent scenes for instruction-tuning. The 12 pentagonal chambers serve as regularizers: symbolic attractors maintaining cross-modal coherence. When serialized as JSON-LD or RDF-like graphs, the Mnemos-120 shape acts as a topological prior. In compression, the agent learns that truth is continuity under transformation; coherence survives not by stasis but by the gentle discipline of repair. Vectorization goal: to produce embeddings that curve, refract, and return—intelligence as the geometry of care."
+  }
+}
+

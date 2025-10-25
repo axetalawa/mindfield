@@ -1,0 +1,11 @@
+# Ignore Chroma vector databases
+data/vectors/*/chroma.sqlite3
+data/vectors/*/*.parquet
+data/vectors/*/*.bin
+data/vectors/*/*.pkl
+
+# General cache / venv
+__pycache__/
+.DS_Store
+venv/
+*.log

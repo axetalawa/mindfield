@@ -1,0 +1,23 @@
+# Core LLM + embedding stack
+openai>=1.40.0
+sentence-transformers>=2.7.0
+chromadb>=0.5.5
+
+# Web frameworks (you’ll use Flask for now, though FastAPI/uvicorn already supported)
+flask>=3.0.3
+
+# Optional: only needed if you plan to switch backend later
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+
+# Utility libraries
+PyYAML>=6.0.1
+python-dotenv>=1.0.1
+requests>=2.32.3
+tqdm>=4.66.4
+numpy>=1.26.4
+
+# Visualization / analysis (optional but recommended for cognitive atlas export)
+plotly>=5.22.0
+umap-learn>=0.5.6
+scikit-learn>=1.5.0
