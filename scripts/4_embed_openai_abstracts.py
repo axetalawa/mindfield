@@ -1,95 +1,97 @@
 # scripts/4_embed_openai_abstracts.py
-import os, json, time, dotenv
-import chromadb
+import os, time, json, chromadb
 from openai import OpenAI
+from dotenv import load_dotenv
 
-# ---------- config ----------
-dotenv.load_dotenv()
-ABS_PATH   = "data/processed/abstracts.jsonl"
-DB_PATH   = "data/vectors/abstracts_v2"
-COLL_NAME = "mindfield_compasses_large_v2"
-     # orientation layer
-EMB_MODEL  = os.getenv("OPENAI_EMBED_MODEL", "text-embedding-3-large")
-API_KEY    = os.getenv("OPENAI_API_KEY")
+load_dotenv()
 
-BATCH_SIZE = 64
-# ----------------------------
+# ── ENV CONFIG ─────────────────────────────────────────────────────────────
+CHROMA_MODE       = os.getenv("CHROMA_MODE", "local")
+CHROMA_URL        = os.getenv("CHROMA_URL", "https://api.trychroma.com")
+CHROMA_API_KEY    = os.getenv("CHROMA_API_KEY")
+CHROMA_DB_NAME    = os.getenv("CHROMA_DB_NAME", "mindfield")
+CHROMA_TENANT     = os.getenv("CHROMA_TENANT", "default_tenant")
+COLLECTION_NAME   = "mindfield_compasses_large_v2"
+DATA_PATH         = "data/processed/abstracts.jsonl"
+LOCAL_VECTOR_PATH = "data/vectors/abstracts_v2"
+EMBED_MODEL       = os.getenv("OPENAI_EMBED_MODEL", "text-embedding-3-large")
+API_KEY           = os.getenv("OPENAI_API_KEY")
 
-def sanitize_meta(d: dict) -> dict:
-    """Cast to legal Chroma metadata types and drop empties."""
-    def cast(v):
-        if v is None: return ""
-        if isinstance(v, (bool, int, float, str)): return v
-        return str(v)
-    out = {k: cast(v) for k, v in d.items()}
-    return {k: v for k, v in out.items() if v not in ["", "None", None]}
+# ── CLIENT SETUP ───────────────────────────────────────────────────────────
+def get_chroma_client():
+    """Return local or cloud Chroma client (v1.2+)."""
+    if CHROMA_MODE == "cloud":
+        print("☁️  Connecting to Chroma Cloud (v1.2+ API)...")
+        return chromadb.HttpClient(
+            host=CHROMA_URL,
+            headers={"X-Chroma-Token": CHROMA_API_KEY},
+            database=CHROMA_DB_NAME,
+            tenant=CHROMA_TENANT
+        )
+    else:
+        print("💽  Using local Chroma storage...")
+        return chromadb.PersistentClient(path=LOCAL_VECTOR_PATH)
 
-def embed_batch(client: OpenAI, texts: list[str]) -> list[list[float]]:
-    r = client.embeddings.create(model=EMB_MODEL, input=texts)
-    return [item.embedding for item in r.data]
-
+# ── MAIN INGESTION ─────────────────────────────────────────────────────────
 def main():
-    if not API_KEY:
-        raise RuntimeError("OPENAI_API_KEY is missing in your .env")
-    if not os.path.exists(ABS_PATH):
-        raise FileNotFoundError(f"{ABS_PATH} not found. Run script 3 first.")
+    start = time.time()
+    openai_client = OpenAI(api_key=API_KEY)
+    db = get_chroma_client()
 
-    os.makedirs(DB_PATH, exist_ok=True)
-    client = OpenAI()
+    try:
+        coll = db.get_collection(COLLECTION_NAME)
+    except Exception:
+        print(f"🗃️  Creating new collection: {COLLECTION_NAME}")
+        coll = db.create_collection(COLLECTION_NAME)
 
-    print(f"\n🧭 Using OpenAI embedding model: {EMB_MODEL}")
-    print("🗃️  Initializing Chroma collection (orientation layer)…")
-    db = chromadb.PersistentClient(path=DB_PATH)
-    coll = db.get_or_create_collection(COLL_NAME)
+    print(f"🧭 Using OpenAI embedding model: {EMBED_MODEL}")
+    with open(DATA_PATH, "r") as f:
+        docs = [json.loads(line) for line in f]
 
     ids, texts, metas = [], [], []
-    total = 0
-    t0 = time.time()
+    
+    # --- MODIFIED LOOP ---
+    for i, d in enumerate(docs):
+        
+        # 1. Create a unique ID since 'id' does not exist
+        doc_id = f"{d.get('codex_id')}_{d.get('node_index')}_{d.get('field_index')}"
+        
+        # 2. Use the 'summary' field for text
+        doc_text = d.get("summary")
 
-    # stream abstracts.jsonl and batch
-    with open(ABS_PATH, "r", encoding="utf-8") as f:
-        for i, line in enumerate(f, start=1):
-            obj = json.loads(line)
-            # required text field for embedding
-            # prefer the fused 'summary' if present; otherwise combine node+field
-            text = (
-                obj.get("summary")
-                or f"{obj.get('node_label','')} — {obj.get('node_summary','')} :: {obj.get('field_label','')} — {obj.get('field_paragraph','')}"
-            ).strip()
-            if not text:
-                continue
+        # 3. Safety check if 'summary' key is missing
+        if not doc_text:
+            print(f"⚠️  Skipping record {i}. Missing 'summary' field.")
+            continue
 
-            _id = obj.get("id") or f"{obj.get('codex_id','?')}::compass::{i}"
-            meta = sanitize_meta({
-                "codex_id":       obj.get("codex_id"),
-                "node_index":     obj.get("node_index"),
-                "node_label":     obj.get("node_label"),
-                "field_index":    obj.get("field_index"),
-                "field_label":    obj.get("field_label"),
-                "geometry_pair":  obj.get("geometry_pair", "icosa↔dodeca"),
-                "source":         obj.get("source"),
-            })
+        ids.append(doc_id)
+        texts.append(doc_text)
+        metas.append({
+            "codex_id": d.get("codex_id"),
+            "geometry_pair": d.get("geometry_pair"),
+            "node_label": d.get("node_label"),
+            "field_label": d.get("field_label"),
+            "source": d.get("source"),
+        })
+        
+        if (i + 1) % 64 == 0:
+            resp = openai_client.embeddings.create(model=EMBED_MODEL, input=texts)
+            embs = [e.embedding for e in resp.data]
+            coll.add(ids=ids, embeddings=embs, metadatas=metas, documents=texts)
+            print(f"   ↳ {i+1} compasses indexados...")
+            ids, texts, metas = [], [], []
 
-            ids.append(_id)
-            texts.append(text)
-            metas.append(meta)
+    if texts:
+        resp = openai_client.embeddings.create(model=EMBED_MODEL, input=texts)
+        embs = [e.embedding for e in resp.data]
+        coll.add(ids=ids, embeddings=embs, metadatas=metas, documents=texts)
 
-            if len(ids) >= BATCH_SIZE:
-                embs = embed_batch(client, texts)
-                coll.add(ids=ids, embeddings=embs, metadatas=metas)
-                total += len(ids)
-                print(f"   ↳ {total} compasses indexed…")
-                ids, texts, metas = [], [], []
+    print(f"\n[OK] Indexed {len(docs)} dual-geometry compasses in {round((time.time()-start)/60,1)} min.")
+    if CHROMA_MODE == "local":
+        print(f"Collection saved locally at {LOCAL_VECTOR_PATH}")
+    else:
+        print(f"☁️  Uploaded to Chroma Cloud database '{CHROMA_DB_NAME}'.")
 
-    # flush
-    if ids:
-        embs = embed_batch(client, texts)
-        coll.add(ids=ids, embeddings=embs, metadatas=metas)
-        total += len(ids)
-
-    dt = time.time() - t0
-    print(f"\n[OK] Indexed {total} dual-geometry compasses in {dt/60:.1f} min.")
-    print(f"Collection: {COLL_NAME} → {DB_PATH}")
 
 if __name__ == "__main__":
     main()

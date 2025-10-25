@@ -1,84 +1,80 @@
 # scripts/2_embed_local.py
-import os, json, time
-import chromadb
+import os, time, json, chromadb
 from sentence_transformers import SentenceTransformer
+from dotenv import load_dotenv
 
-# Caminhos
-ARCHIVE_PATH = "data/processed/archive.jsonl"
-DB_PATH = "data/vectors/local"
-COLLECTION_NAME = "mindfield_fragments"
+load_dotenv()
 
-# Modelo de embeddings
-MODEL_NAME = "BAAI/bge-large-en-v1.5"  # ou 'BAAI/bge-base-en-v1.5' se quiser mais leve
+# ── ENV CONFIG ─────────────────────────────────────────────────────────────
+CHROMA_MODE       = os.getenv("CHROMA_MODE", "local")
+CHROMA_URL        = os.getenv("CHROMA_URL", "https://api.trychroma.com")
+CHROMA_API_KEY    = os.getenv("CHROMA_API_KEY")
+CHROMA_DB_NAME    = os.getenv("CHROMA_DB_NAME", "mindfield")
+CHROMA_TENANT     = os.getenv("CHROMA_TENANT", "default_tenant") # <-- ADDED
+COLLECTION_NAME   = "mindfield_fragments"
+DATA_PATH         = "data/processed/archive.jsonl"
+LOCAL_VECTOR_PATH = "data/vectors/local"
+MODEL_NAME        = "BAAI/bge-large-en-v1.5"
 
-def main():
-    if not os.path.exists(ARCHIVE_PATH):
-        raise FileNotFoundError(f"Arquivo {ARCHIVE_PATH} não encontrado.")
-    os.makedirs(DB_PATH, exist_ok=True)
-
-    print(f"\n🧭 carregando modelo {MODEL_NAME} ...")
-    model = SentenceTransformer(MODEL_NAME)
-    model.max_seq_length = 8192
-
-    print("🗃️  inicializando base vetorial ...")
-    client = chromadb.PersistentClient(path=DB_PATH)
-    coll = client.get_or_create_collection(COLLECTION_NAME)
-
-    ids, embeddings, metadatas, texts = [], [], [], []
-    total = 0
-    t0 = time.time()
-
-    with open(ARCHIVE_PATH, "r", encoding="utf-8") as f:
-        for i, line in enumerate(f, start=1):
-            doc = json.loads(line)
-            text = doc.get("content", "").strip()
-            if not text:
-                continue
-
-            emb = model.encode(text, normalize_embeddings=True)
-            ids.append(doc["id"])
-            embeddings.append(emb.tolist())
-            texts.append(text)
-
-            meta = {
-                "codex_id": str(doc.get("codex_id", "")),
-                "category": str(doc.get("category", "")),
-                "index": str(doc.get("index", "")),
-                "slug": str(doc.get("slug", "")),
-                "codex_title": str(doc.get("codex_title", "")),
-                "segment": int(doc.get("segment", 0)),
-                "title": str(doc.get("title", "")),
-                "epoch": str(doc.get("epoch", "")),
-                "voice": str(doc.get("voice", "")),
-                "mood": str(doc.get("mood", "")),
-            }
-            meta = {k: v for k, v in meta.items() if v not in ["", "None", None]}
-            metadatas.append(meta)
-
-            if len(ids) >= 64:
-                coll.add(
-                    ids=ids,
-                    embeddings=embeddings,
-                    metadatas=metadatas,
-                    documents=texts
-                )
-                total += len(ids)
-                print(f"   ↳ {total} fragmentos indexados...")
-                ids, embeddings, metadatas, texts = [], [], [], []
-
-    # flush final
-    if ids:
-        coll.add(
-            ids=ids,
-            embeddings=embeddings,
-            metadatas=metadatas,
-            documents=texts
+# ── CLIENT SETUP ───────────────────────────────────────────────────────────
+def get_chroma_client():
+    """Return local or cloud Chroma client (v1.2+)."""
+    if CHROMA_MODE == "cloud":
+        print("☁️  Connecting to Chroma Cloud (v1.2+ API)...")
+        # --- UPDATED ---
+        return chromadb.HttpClient(
+            host=CHROMA_URL,
+            headers={"X-Chroma-Token": CHROMA_API_KEY},
+            database=CHROMA_DB_NAME,
+            tenant=CHROMA_TENANT
         )
-        total += len(ids)
+        # ---------------
+    else:
+        print("💽  Using local Chroma storage...")
+        return chromadb.PersistentClient(path=LOCAL_VECTOR_PATH)
 
-    dt = time.time() - t0
-    print(f"\n[OK] Indexados {total} fragmentos em {dt/60:.1f} min.")
-    print(f"Base vetorial salva em {DB_PATH}")
+# ── MAIN INGESTION ─────────────────────────────────────────────────────────
+def main():
+    start = time.time()
+    model = SentenceTransformer(MODEL_NAME)
+    db = get_chroma_client()
+
+    try:
+        coll = db.get_collection(COLLECTION_NAME)
+    except Exception:
+        print(f"🗃️  Creating new collection: {COLLECTION_NAME}")
+        coll = db.create_collection(COLLECTION_NAME)
+
+    print(f"🧭 carregando modelo {MODEL_NAME} ...")
+    with open(DATA_PATH, "r") as f:
+        docs = [json.loads(line) for line in f]
+
+    ids, texts, metas = [], [], []
+    for i, d in enumerate(docs):
+        ids.append(d["id"])
+        texts.append(d["content"])
+        metas.append({
+            "title": d.get("title"),
+            "codex_id": d.get("codex_id"),
+            "segment": d.get("segment"),
+            "category": d.get("category"),
+            "slug": d.get("slug"),
+        })
+        if (i + 1) % 64 == 0:
+            embs = model.encode(texts, normalize_embeddings=True).tolist()
+            coll.add(ids=ids, embeddings=embs, metadatas=metas, documents=texts)
+            print(f"   ↳ {i+1} fragmentos indexados...")
+            ids, texts, metas = [], [], []
+
+    if texts:
+        embs = model.encode(texts, normalize_embeddings=True).tolist()
+        coll.add(ids=ids, embeddings=embs, metadatas=metas, documents=texts)
+
+    print(f"\n[OK] Indexados {len(docs)} fragmentos em {round((time.time()-start)/60,1)} min.")
+    if CHROMA_MODE == "local":
+        print(f"Base vetorial salva em {LOCAL_VECTOR_PATH}")
+    else:
+        print(f"☁️  Upload concluído na base '{CHROMA_DB_NAME}'.")
 
 if __name__ == "__main__":
     main()
