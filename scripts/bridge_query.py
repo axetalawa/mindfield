@@ -1,109 +1,117 @@
-# scripts/bridge_query.py
-import os, chromadb
-from openai import OpenAI
-from sentence_transformers import SentenceTransformer
-from dotenv import load_dotenv
+"""
+bridge_query.py
+MindField dual-geometry query bridge
+------------------------------------
+Routes semantic queries through both hemispheres:
+ - Orientation layer (theory compasses)
+ - Texture layer (paragraph fragments)
 
+Automatically connects to either:
+  • Local persistent Chroma (development)
+  • Chroma Cloud (production)
+
+Controlled via .env:
+  CHROMA_MODE = local | cloud
+  CHROMA_API_KEY = <your cloud key>
+  CHROMA_DB_NAME = <database name>
+  CHROMA_TENANT  = <tenant name>
+"""
+
+import os
+import chromadb
+from chromadb import Client
+from chromadb.config import Settings
+
+from dotenv import load_dotenv
 load_dotenv()
 
-# --- Paths and models ---
-DB_ORIENT_PATH = "data/vectors/abstracts_v2"   # 3072-D OpenAI layer (orientation)
-DB_FIELD_PATH  = "data/vectors/local"          # 1024-D local layer (texture)
+# ─────────────────────────────────────────────
+# Chroma connection logic
+# ─────────────────────────────────────────────
+CHROMA_MODE = os.getenv("CHROMA_MODE", "local").lower()
 
-COLL_ORIENT = "mindfield_compasses_large_v2"
-COLL_FIELD  = "mindfield_fragments"
-
-EMB_MODEL_OPENAI = os.getenv("OPENAI_EMBED_MODEL", "text-embedding-3-large")
-API_KEY           = os.getenv("OPENAI_API_KEY")
-LOCAL_MODEL_NAME  = "BAAI/bge-large-en-v1.5"
-
-TOP_K = 5
-
-# --- Cloud / local Chroma setup ---
-CHROMA_MODE     = os.getenv("CHROMA_MODE", "local")  # "local" or "cloud"
-
-# --- Mode selection ---
-CHROMA_MODE = os.getenv("CHROMA_MODE", "local")
-
-# --- Visual confirmation in console ---
-mode_icon = "💽" if CHROMA_MODE == "local" else "☁️"
-print(f"{mode_icon}  Running in {CHROMA_MODE.upper()} mode")
-
-CHROMA_URL      = os.getenv("CHROMA_URL", "https://api.trychroma.com")
-CHROMA_API_KEY  = os.getenv("CHROMA_API_KEY")
-CHROMA_DB_NAME  = os.getenv("CHROMA_DB_NAME", "mindfield")
-
-
-def get_chroma_collections():
-    """Return orientation + texture collections for the active mode."""
+def get_chroma_client():
+    """Initialize Chroma in local or cloud mode."""
     if CHROMA_MODE == "cloud":
-        print(f"☁️  Connecting to Chroma Cloud ({CHROMA_DB_NAME})...")
-        client = chromadb.HttpClient(
-            host=CHROMA_URL,
-            api_key=CHROMA_API_KEY,
-            database=CHROMA_DB_NAME
+        print("☁️  Connecting to Chroma Cloud (v1.x client)...")
+        return Client(
+            api_key=os.getenv("CHROMA_API_KEY"),
+            database=os.getenv("CHROMA_DB_NAME"),
+            tenant=os.getenv("CHROMA_TENANT", "default_tenant"),
         )
-        coll_o = client.get_or_create_collection(COLL_ORIENT)
-        coll_f = client.get_or_create_collection(COLL_FIELD)
     else:
-        print("💽  Using local Chroma stores...")
-        db_o = chromadb.PersistentClient(path=DB_ORIENT_PATH)
-        coll_o = db_o.get_collection(COLL_ORIENT)
-        db_f = chromadb.PersistentClient(path=DB_FIELD_PATH)
-        coll_f = db_f.get_collection(COLL_FIELD)
-    return coll_o, coll_f
+        print("💾  Using local Chroma persistence...")
+        vector_path = os.getenv("CHROMA_LOCAL_PATH", "data/vectors/local")
+        return chromadb.PersistentClient(path=vector_path)
 
+# ─────────────────────────────────────────────
+# Query function
+# ─────────────────────────────────────────────
+def query_bridge(query_text: str):
+    """
+    Run a dual-geometry query against both vector collections.
+    Returns a structured dict with 'orientation' and 'texture' results.
+    """
+    client = get_chroma_client()
 
-# --- Main bridge function ---
-def query_bridge(query: str) -> dict:
-    """Bridge across dual embedding spaces (OpenAI + Local)."""
-    if not API_KEY:
-        raise RuntimeError("Missing OPENAI_API_KEY")
+    # Collections: orientation (theory compasses) + texture (paragraph fragments)
+    orientation_collection_name = os.getenv(
+        "CHROMA_COLLECTION_ORIENTATION", "mindfield_compasses_large_v2"
+    )
+    texture_collection_name = os.getenv(
+        "CHROMA_COLLECTION_TEXTURE", "mindfield_fragments_v2"
+    )
 
-    # Initialize embedding engines
-    openai_client = OpenAI(api_key=API_KEY)
-    local_model = SentenceTransformer(LOCAL_MODEL_NAME)
+    try:
+        orientation = client.get_collection(orientation_collection_name)
+        texture = client.get_collection(texture_collection_name)
+    except Exception as e:
+        raise RuntimeError(f"Failed to load collections: {e}")
 
-    # Get appropriate Chroma collections
-    coll_o, coll_f = get_chroma_collections()
+    # ── Orientation layer query ──
+    orient_results = orientation.query(
+        query_texts=[query_text],
+        n_results=5,
+    )
 
-    # --- Embed query for both hemispheres ---
-    q_vec_o = openai_client.embeddings.create(
-        model=EMB_MODEL_OPENAI, input=query
-    ).data[0].embedding
+    orientation_hits = []
+    if orient_results and "documents" in orient_results:
+        for i in range(len(orient_results["ids"][0])):
+            orientation_hits.append({
+                "codex_id": orient_results["metadatas"][0][i].get("codex_id", ""),
+                "node_label": orient_results["metadatas"][0][i].get("node_label", ""),
+                "field_label": orient_results["metadatas"][0][i].get("field_label", ""),
+                "source": orient_results["metadatas"][0][i].get("source", ""),
+                "geometry_pair": orient_results["metadatas"][0][i].get("geometry_pair", ""),
+            })
 
-    q_vec_f = local_model.encode(query, normalize_embeddings=True).tolist()
+    # ── Texture layer query ──
+    text_results = texture.query(
+        query_texts=[query_text],
+        n_results=5,
+    )
 
-    # --- Query both hemispheres ---
-    orient_results = coll_o.query(query_embeddings=[q_vec_o], n_results=TOP_K)
-    texture_results = coll_f.query(query_embeddings=[q_vec_f], n_results=TOP_K)
+    texture_hits = []
+    if text_results and "documents" in text_results:
+        for i in range(len(text_results["ids"][0])):
+            texture_hits.append({
+                "codex_id": text_results["metadatas"][0][i].get("codex_id", ""),
+                "title": text_results["metadatas"][0][i].get("title", ""),
+                "segment": text_results["metadatas"][0][i].get("segment", ""),
+                "document": text_results["documents"][0][i],
+            })
 
-    # --- Reformat results ---
-    orientation = []
-    texture = []
+    return {
+        "orientation": orientation_hits,
+        "texture": texture_hits,
+    }
 
-    # Orientation layer
-    for ids, meta in zip(orient_results["ids"][0], orient_results["metadatas"][0]):
-        orientation.append({
-            "codex_id": meta.get("codex_id"),
-            "node_label": meta.get("node_label"),
-            "field_label": meta.get("field_label"),
-            "source": meta.get("source"),
-            "geometry_pair": meta.get("geometry_pair"),
-        })
-
-    # Texture layer
-    for ids, meta, doc in zip(
-        texture_results["ids"][0],
-        texture_results["metadatas"][0],
-        texture_results["documents"][0],
-    ):
-        texture.append({
-            "codex_id": meta.get("codex_id"),
-            "title": meta.get("title"),
-            "segment": meta.get("segment"),
-            "document": doc,
-        })
-
-    print("✅ bridge complete")
-    return {"orientation": orientation, "texture": texture}
+# ─────────────────────────────────────────────
+# Local test harness
+# ─────────────────────────────────────────────
+if __name__ == "__main__":
+    print(f"Running bridge in {CHROMA_MODE.upper()} mode\n")
+    q = input("Enter query: ").strip()
+    if q:
+        result = query_bridge(q)
+        print(result)
