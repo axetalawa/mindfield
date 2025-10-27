@@ -1,12 +1,9 @@
----
 # CHANGELOG.md — Commit Story of MindField  
 ### Cognitive Geometry, Embedding Atlases & the Bridge Query System  
 *Mute Logic Lab — Salvador, Bahia (2025)*  
 
 > *Before understanding could be measured,  
 > it had to learn how to take shape.*
-
----
 
 ## Phase I — Corpus Genesis (March–April 2025)
 
