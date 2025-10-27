@@ -1,12 +1,9 @@
----
 # 🜂 MindField Atlas  
 ### Cognitive Geometry, Semantic Embeddings, and the Bridge Query System  
 *Mute Logic Lab — Salvador, Bahia (2025)*
 
 > *Every field of thought has a topology.  
 > MindField lets you see it.*
-
----
 
 ## ✴ Overview
 
